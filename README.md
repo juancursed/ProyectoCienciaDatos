@@ -1,5 +1,4 @@
-# Proyecto1 Ciencia de datos
-# Proyecto con Pandas
+# Proyecto #1 con Pandas || Ciencia de Datos
 
 ## Descripción
 Este proyecto utiliza la librería Pandas para manipular y analizar datos de manera eficiente. Se incluyen funciones para limpieza, transformación y visualización de datos.
