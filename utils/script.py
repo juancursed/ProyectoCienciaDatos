@@ -18,13 +18,16 @@ print(df.head())
 
 # Crear la tabla DimCliente
 DimCliente = df[['customer_id', 'gender', 'age']].drop_duplicates().reset_index(drop=True)
+DimCliente["ProductoPreferido"] = pd.NA
 DimCliente.rename(columns={'customer_id': 'IDCliente', 'gender': 'Genero', 'age': 'Edad'}, inplace=True)
 
 # Crear la tabla DimProducto
 DimProducto = df[['category']].drop_duplicates().reset_index(drop=True)
 DimProducto['IDProducto'] = DimProducto.index + 1
+DimProducto['nombre'] = pd.NA
+DimProducto['PorcentajeDescuento'] = pd.NA
 DimProducto.rename(columns={'category': 'Categoria'}, inplace=True)
-
+print(DimProducto)
 # Crear la tabla DimFecha
 df['invoice_date'] = pd.to_datetime(df['invoice_date'], dayfirst=True, errors='coerce')
 DimFecha = df[['invoice_date']].drop_duplicates().reset_index(drop=True)
@@ -38,6 +41,7 @@ DimFecha.rename(columns={'invoice_date': 'FechaFactura'}, inplace=True)
 # Crear la tabla DimTienda
 DimTienda = df[['shopping_mall']].drop_duplicates().reset_index(drop=True)
 DimTienda['IDTienda'] = DimTienda.index + 1
+DimTienda['ciudad'] = pd.NA
 DimTienda.rename(columns={'shopping_mall': 'CentroComercial'}, inplace=True)
 
 
@@ -48,17 +52,17 @@ Ventas = df.merge(DimCliente, left_on='customer_id', right_on='IDCliente')\
            .merge(DimTienda, left_on='shopping_mall', right_on='CentroComercial')
 
 # Seleccionar solo las columnas necesarias
-Ventas = Ventas[['invoice_no', 'IDCliente', 'IDProducto', 'IDFecha', 'IDTienda', 'quantity', 'price', 'payment_method']]
+Ventas = Ventas[['invoice_no', 'IDCliente', 'IDProducto', 'IDFecha', 'IDTienda', 'quantity', 'price', 'payment_method']] 
 Ventas.rename(columns={'invoice_no': 'NumFacturaNominal', 'quantity': 'Cantidad', 'price': 'Precio', 'payment_method': 'MetodoPago'}, inplace=True)
 
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine
 
 # Conectar con PostgreSQL
-engine = create_engine("postgresql://admin:admin@localhost:5432/ventas")
+#engine = create_engine("postgresql://admin:admin@localhost:5432/ventas")
 
 # Cargar cada tabla en PostgreSQL
-DimCliente.to_sql("dim_cliente", engine, if_exists="replace", index=False)  
-DimProducto.to_sql("dim_producto", engine, if_exists="replace", index=False)  
-DimFecha.to_sql("dim_fecha", engine, if_exists="replace", index=False)  
-DimTienda.to_sql("dim_tienda", engine, if_exists="replace", index=False)  
-Ventas.to_sql("ventas", engine, if_exists="replace", index=False)
+#DimCliente.to_sql("dim_cliente", engine, if_exists="replace", index=False)  
+#DimProducto.to_sql("dim_producto", engine, if_exists="replace", index=False)  
+#DimFecha.to_sql("dim_fecha", engine, if_exists="replace", index=False)  
+#DimTienda.to_sql("dim_tienda", engine, if_exists="replace", index=False)  
+#Ventas.to_sql("ventas", engine, if_exists="replace", index=False)
